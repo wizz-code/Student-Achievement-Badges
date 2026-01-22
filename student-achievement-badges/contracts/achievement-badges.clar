@@ -42,3 +42,32 @@
 (define-map user-badge-count principal uint)
 
 (define-map authorized-issuers principal bool)
+
+;; Read-only functions
+(define-read-only (get-badge-type (badge-type-id uint))
+  (map-get? badge-types badge-type-id)
+)
+
+(define-read-only (get-badge-award (award-id uint))
+  (map-get? badge-awards award-id)
+)
+
+(define-read-only (has-badge (recipient principal) (badge-type-id uint))
+  (is-some (map-get? user-badge-awards { recipient: recipient, badge-type-id: badge-type-id }))
+)
+
+(define-read-only (get-user-badge-count (user principal))
+  (default-to u0 (map-get? user-badge-count user))
+)
+
+(define-read-only (is-authorized-issuer (issuer principal))
+  (default-to false (map-get? authorized-issuers issuer))
+)
+
+(define-read-only (get-badge-type-nonce)
+  (var-get badge-type-nonce)
+)
+
+(define-read-only (get-badge-award-nonce)
+  (var-get badge-award-nonce)
+)
